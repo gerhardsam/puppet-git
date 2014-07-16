@@ -25,6 +25,7 @@ define git::repo(
   $group    = 'root',
   $update   = false,
   $bare     = false,
+  $shared   = false,
   $timeout   = 60
 ){
 
@@ -43,7 +44,11 @@ define git::repo(
     $init_cmd = "${git::params::bin} clone -b ${real_branch} ${source} ${path} --recursive"
   } else {
     if $bare {
-      $init_cmd = "${git::params::bin} init --bare ${path}"
+      if $shared {
+        $init_cmd = "${git::params::bin} init --bare --shared ${path}"
+      } else {
+        $init_cmd = "${git::params::bin} init --bare ${path}"
+      }
     } else {
       $init_cmd = "${git::params::bin} init ${path}"
     }
